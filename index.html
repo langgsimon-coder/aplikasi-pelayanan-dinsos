@@ -3,75 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dashboard pendataan pelayanan Dinas Sosial">
-  <title>Aplikasi Pelayanan Dinas Sosial</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Aplikasi Pelayanan Dinas Sosial - V1</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-wrap">
-        <div class="brand-mark" aria-hidden="true">DS</div>
+  <header class="topbar">
+    <div>
+      <h1>Aplikasi Pelayanan Dinas Sosial</h1>
+      <p>Versi 1.0 • Pendataan dan rekap pelayanan sederhana</p>
+    </div>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <main class="container">
+    <section class="dashboard">
+      <div class="card stat"><span>Total Data</span><strong id="totalData">0</strong></div>
+      <div class="card stat"><span>Menunggu</span><strong id="menunggu">0</strong></div>
+      <div class="card stat"><span>Diproses</span><strong id="diproses">0</strong></div>
+      <div class="card stat"><span>Selesai</span><strong id="selesai">0</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
         <div>
-          <p class="eyebrow">SISTEM INFORMASI PELAYANAN</p>
-          <h1>Dinas Sosial</h1>
-          <p class="subtitle">Kelola data pelayanan masyarakat dengan mudah dan teratur.</p>
+          <h2>Input Data Pelayanan</h2>
+          <p>Isi data masyarakat yang menerima atau mengajukan pelayanan.</p>
         </div>
       </div>
-      <div class="topbar-meta">
-        <span class="live-indicator"><i></i> Sistem aktif</span>
-        <div class="clock" id="clock"></div>
-      </div>
-    </header>
 
-    <main class="container">
-      <div class="page-heading">
+      <form id="serviceForm">
+        <div class="form-grid">
+          <label>Nama Lengkap
+            <input type="text" id="nama" required placeholder="Contoh: Ahmad">
+          </label>
+          <label>NIK
+            <input type="text" id="nik" maxlength="16" inputmode="numeric" required placeholder="16 digit NIK">
+          </label>
+          <label>Kelurahan
+            <input type="text" id="kelurahan" required placeholder="Nama kelurahan">
+          </label>
+          <label>Jenis Pelayanan
+            <select id="layanan" required>
+              <option value="">-- Pilih pelayanan --</option>
+              <option>Puskesos Kelurahan</option>
+              <option>PKH</option>
+              <option>Konsultasi DTSEN</option>
+              <option>PBI-JKN / BPJS / Jamkesda</option>
+              <option>Bantuan Korban Bencana</option>
+              <option>Rekomendasi Keluarga Miskin</option>
+              <option>Disabilitas</option>
+              <option>Lansia</option>
+              <option>Orang Terlantar</option>
+              <option>Anjal / Gepeng / Pengamen</option>
+              <option>ODGJ</option>
+              <option>Lainnya</option>
+            </select>
+          </label>
+          <label>Status
+            <select id="status" required>
+              <option>Menunggu</option>
+              <option>Diproses</option>
+              <option>Selesai</option>
+            </select>
+          </label>
+          <label>Tanggal
+            <input type="date" id="tanggal" required>
+          </label>
+          <label class="full">Keterangan
+            <textarea id="keterangan" rows="3" placeholder="Keterangan tambahan (opsional)"></textarea>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" type="submit">+ Simpan Data</button>
+          <button class="btn secondary" type="button" id="resetForm">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
         <div>
-          <p class="eyebrow accent">RINGKASAN AKTIVITAS</p>
-          <h2>Dashboard Pelayanan</h2>
-          <p class="page-description">Pantau dan kelola seluruh data pelayanan dalam satu tempat.</p>
+          <h2>Data Pelayanan</h2>
+          <p>Data tersimpan di browser perangkat ini (localStorage).</p>
         </div>
-        <div class="security-note"><span aria-hidden="true">🔒</span> Data tersimpan aman di perangkat ini</div>
+        <div class="actions">
+          <button class="btn secondary" id="exportCsv">Export CSV</button>
+          <button class="btn danger" id="hapusSemua">Hapus Semua</button>
+        </div>
       </div>
 
-      <section class="dashboard" aria-label="Ringkasan data">
-        <div class="card stat-card total-card"><div class="stat-icon">▣</div><div><span>Total Data</span><strong id="totalData">0</strong><small>Semua pengajuan</small></div></div>
-        <div class="card stat-card waiting-card"><div class="stat-icon">◷</div><div><span>Menunggu</span><strong id="menunggu">0</strong><small>Perlu ditindaklanjuti</small></div></div>
-        <div class="card stat-card process-card"><div class="stat-icon">↻</div><div><span>Diproses</span><strong id="diproses">0</strong><small>Sedang ditangani</small></div></div>
-        <div class="card stat-card done-card"><div class="stat-icon">✓</div><div><span>Selesai</span><strong id="selesai">0</strong><small>Telah diselesaikan</small></div></div>
-      </section>
+      <div class="filters">
+        <input type="search" id="search" placeholder="Cari nama, NIK, kelurahan, atau pelayanan...">
+        <select id="filterStatus">
+          <option value="">Semua Status</option>
+          <option>Menunggu</option>
+          <option>Diproses</option>
+          <option>Selesai</option>
+        </select>
+      </div>
 
-      <section class="card form-card">
-        <div class="section-title">
-          <div class="title-with-icon"><div class="section-icon">＋</div><div><h2>Input Data Pelayanan</h2><p>Tambahkan data masyarakat yang menerima atau mengajukan pelayanan.</p></div></div>
-          <span class="required-note"><b>*</b> Wajib diisi</span>
-        </div>
-        <form id="serviceForm">
-          <div class="form-grid">
-            <label>Nama Lengkap <span class="label-required">*</span><input type="text" id="nama" required placeholder="Contoh: Ahmad"></label>
-            <label>NIK <span class="label-required">*</span><input type="text" id="nik" maxlength="16" inputmode="numeric" required placeholder="16 digit NIK"></label>
-            <label>Kelurahan <span class="label-required">*</span><input type="text" id="kelurahan" required placeholder="Nama kelurahan"></label>
-            <label>Jenis Pelayanan <span class="label-required">*</span><select id="layanan" required><option value="">-- Pilih pelayanan --</option><option>Puskesos Kelurahan</option><option>PKH</option><option>Konsultasi DTSEN</option><option>PBI-JKN / BPJS / Jamkesda</option><option>Bantuan Korban Bencana</option><option>Rekomendasi Keluarga Miskin</option><option>Disabilitas</option><option>Lansia</option><option>Orang Terlantar</option><option>Anjal / Gepeng / Pengamen</option><option>ODGJ</option><option>Lainnya</option></select></label>
-            <label>Status <span class="label-required">*</span><select id="status" required><option>Menunggu</option><option>Diproses</option><option>Selesai</option></select></label>
-            <label>Tanggal <span class="label-required">*</span><input type="date" id="tanggal" required></label>
-            <label class="full">Keterangan <span class="optional-label">(opsional)</span><textarea id="keterangan" rows="3" placeholder="Tambahkan keterangan bila diperlukan..."></textarea></label>
-          </div>
-          <div class="actions"><button class="btn primary" type="submit">＋ Simpan Data</button><button class="btn secondary" type="button" id="resetForm">Reset Form</button></div>
-        </form>
-      </section>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Nama</th>
+              <th>NIK</th>
+              <th>Kelurahan</th>
+              <th>Pelayanan</th>
+              <th>Status</th>
+              <th>Keterangan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
 
-      <section class="card data-card">
-        <div class="section-title data-heading"><div><p class="eyebrow accent">DATABASE PELAYANAN</p><h2>Data Pelayanan</h2><p>Kelola, cari, dan pantau data pelayanan yang tersimpan.</p></div><div class="actions"><button class="btn secondary" id="exportCsv">⇩ Export CSV</button><button class="btn danger" id="hapusSemua">♲ Hapus Semua</button></div></div>
-        <div class="filters"><div class="search-wrap"><span>⌕</span><input type="search" id="search" placeholder="Cari nama, NIK, kelurahan, atau pelayanan..."></div><select id="filterStatus"><option value="">Semua Status</option><option>Menunggu</option><option>Diproses</option><option>Selesai</option></select></div>
-        <div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Nama</th><th>NIK</th><th>Kelurahan</th><th>Pelayanan</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="tableBody"></tbody></table></div>
-        <p class="empty" id="emptyState">Belum ada data pelayanan.</p>
-      </section>
-    </main>
-    <footer><strong>Aplikasi Pelayanan Dinas Sosial</strong><span>•</span> Versi 1.0 <span>•</span> Data tersimpan lokal di browser</footer>
-  </div>
+      <p class="empty" id="emptyState">Belum ada data.</p>
+    </section>
+  </main>
+
+  <footer>
+    Aplikasi Pelayanan Dinas Sosial • Versi pembelajaran • Data tersimpan lokal di browser
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
